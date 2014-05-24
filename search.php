@@ -3,7 +3,7 @@
 <div align="center">
 <?php
 	function request_search($query) {
-		$APIKey = "INSERT_API_KEY";
+		$APIKey = "YOUR_TINYSONGAPI_KEY_HERE";
 		$message = "http://tinysong.com/s/";
 		$message .= urlencode($query);
 		$message .= "?format=json&limit=32&key=";
@@ -146,6 +146,26 @@
 			}
 		}
 	}
+	
+	//Generate functions that add lists (like albums, interprets or the whole stuff)
+	?>
+	<script type="text/javascript">
+	function AddAll() {
+	<?php
+	foreach($interprets as $interpret) {
+		foreach($interpret->albums as $album) {
+			foreach($album->songs as $song) {
+				?>
+				parent.addTitle(<?php echo "'".addslashes($song->interpret)."', '".addslashes($song->name)."', '$song->id'"; ?> );
+				<?php
+			}
+		}
+	}
+	?>
+	}
+	</script>
+	<?php
+	
 	//At the end we show all the Data we got
 	echo "<table width=\"100%\"><tr><th>Interpret</th><th>Title</th><th>Album</th><th>Add to list?</th><tr>";
 	foreach($interprets as $interpret) {
@@ -154,9 +174,9 @@
 			
 	?>
 			<tr style="background-color: #dddddd;text-align: center" >
-				<td><?php echo $song->interpret?></td>
+				<td><a href="./search.php?s=<?php echo $song->interpret; ?>"><?php echo $song->interpret?></a></td>
 				<td><?php echo $song->name;?></td>
-				<td><?php echo $song->album;?></td>
+				<td><a href="./search.php?s=<?php echo $song->album; ?>"><?php echo $song->album;?></a></td>
 				<td><button onclick="parent.addTitle(<?php echo "'".addslashes($song->interpret)."', '".addslashes($song->name)."', '$song->id'"; ?> )">Add to list</button></td>
 			</tr>
 <?php
